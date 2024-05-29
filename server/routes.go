@@ -438,8 +438,15 @@ func (s *Server) PullModelHandler(c *gin.Context) {
 			ch <- r
 		}
 
-		regOpts := &registryOptions{
-			Insecure: req.Insecure,
+		regOpts := getRegistryOptionsForModel(model)
+
+		if req.Username != "" || req.Password != "" {
+			regOpts.Username = req.Username
+			regOpts.Password = req.Password
+		}
+
+		if req.Insecure {
+			regOpts.Insecure = req.Insecure
 		}
 
 		ctx, cancel := context.WithCancel(c.Request.Context())
@@ -486,9 +493,15 @@ func (s *Server) PushModelHandler(c *gin.Context) {
 		fn := func(r api.ProgressResponse) {
 			ch <- r
 		}
+		regOpts := getRegistryOptionsForModel(model)
 
-		regOpts := &registryOptions{
-			Insecure: req.Insecure,
+		if req.Username != "" || req.Password != "" {
+			regOpts.Username = req.Username
+			regOpts.Password = req.Password
+		}
+
+		if req.Insecure {
+			regOpts.Insecure = req.Insecure
 		}
 
 		ctx, cancel := context.WithCancel(c.Request.Context())

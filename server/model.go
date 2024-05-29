@@ -29,7 +29,7 @@ func parseFromModel(ctx context.Context, name model.Name, fn func(api.ProgressRe
 	manifest, _, err := GetManifest(modelpath)
 	switch {
 	case errors.Is(err, os.ErrNotExist):
-		if err := PullModel(ctx, name.String(), &registryOptions{}, fn); err != nil {
+		if err := PullModel(ctx, name.String(), getRegistryOptions(modelpath.Registry), fn); err != nil {
 			return nil, err
 		}
 
